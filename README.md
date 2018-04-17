@@ -18,7 +18,8 @@ source venv/bin/activate
 # get source code
 git clone git@github.com:ndaidong/tf-ssd-mobilenet.git
 
-pip install -r tf-ssd-mobilenet/requirements.txt
+cd tf-ssd-mobilenet
+pip install -r requirements.txt
 ./init.py
 
 ```
