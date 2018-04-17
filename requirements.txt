@@ -1,5 +1,5 @@
 coverage>=4.5
-Cython>=0.2
+Cython>=0.28
 funcy>=1.0
 imgaug>=0.2
 lxml>=4.2
