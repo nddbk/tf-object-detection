@@ -16,7 +16,7 @@ python3 -m venv venv
 source venv/bin/activate
 
 # get source code
-git clone git@github.com:ndaidong/tf-ssd-mobilenet.git
+git clone https://github.com/ndaidong/tf-ssd-mobilenet.git
 
 cd tf-ssd-mobilenet
 pip install -r requirements.txt
