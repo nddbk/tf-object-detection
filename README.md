@@ -2,7 +2,9 @@
 Train Face Detection model with TensorFlow Object Detection + SSD + MobileNet
 
 
-# Usage
+# Preparation
+
+### Setup workspace
 
 ```
 # create workspace folder
@@ -21,7 +23,6 @@ pip install -r tf-ssd-mobilenet/requirements.txt
 
 ```
 
-# Preparation
 
 ### Download dataset
 
