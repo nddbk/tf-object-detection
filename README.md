@@ -13,7 +13,7 @@ cd workspace
 
 # get tensorflow models
 git clone https://github.com/tensorflow/models.git
-cd ../models/research
+cd models/research
 protoc object_detection/protos/*.proto --python_out=.
 export PYTHONPATH=$PYTHONPATH:`pwd`:`pwd`/slim
 
