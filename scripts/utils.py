@@ -165,10 +165,10 @@ def handle(files):
     arr = []
     for i in range(len(files)):
         imagesrc = str(files[i])
-        xmlFile = imagesrc.replace('images/', 'labels/')
-        xmlFile = xmlFile.replace('.jpg', '.xml')
-        if path.isfile(xmlFile):
-            arr.append([imagesrc, xmlFile])
+        xml_file = imagesrc.replace('images/', 'labels/')
+        xml_file = xml_file.replace('.jpg', '.xml')
+        if path.isfile(xml_file):
+            arr.append([imagesrc, xml_file])
     return arr
 
 

@@ -131,6 +131,15 @@ For more info:
 - [TensorFlow Object Detection - Running Locally](https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/running_locally.md)
 
 
+# Export graph
+
+
+```
+# cd workspace/tf-ssd-mobilenet
+python ../models/research/object_detection/export_inference_graph.py --input_type image_tensor --pipeline_config_path=configs/training_pipeline.config --trained_checkpoint_prefix=temp/models/v1/train/model.ckpt-0 --output_directory=temp/output/model_v1_graph.pb
+```
+
+
 # Prediction
 
 

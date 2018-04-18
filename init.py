@@ -7,6 +7,7 @@ dirs = [
     'temp/checkpoints',
     'temp/data',
     'temp/models',
+    'temp/output',
 ]
 
 
