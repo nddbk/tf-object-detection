@@ -24,11 +24,13 @@ pip install -r requirements.txt
 
 ```
 
+For more info:
+
+- [TensorFlow Object Detection - Installation](https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/installation.md)
+
+
 
 ### Download dataset
-
-
-Please follow [the instruction here](https://github.com/ndaidong/vgg-faces-utils#usage).
 
 
 ```
@@ -40,6 +42,10 @@ pip install -r vgg-faces-utils/requirements.txt
 cd vgg-faces-utils
 ./script.py -d vgg_face_dataset/files -o output
 ```
+
+For more info:
+
+- [Download and annotate images from VGG Faces dataset](https://github.com/ndaidong/vgg-faces-utils#usage).
 
 
 ### Generate TFRecord files
@@ -56,6 +62,10 @@ Parameters:
 - `-e`, `--extract`: how many images we want to extract from the whole set. Default: `100`.
 - `-o`, `--output`: relative path to folder where TFRecord files will be saved into. Default: `temp/data`
 - `-r`, `--ratio`: ratio of test set / training set. Default: `0.1` (1 image for test, 9 images for training)
+
+For more info:
+
+- [TensorFlow Object Detection - Preparing Inputs](https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/using_your_own_dataset.md)
 
 
 ### Get checkpoints
@@ -93,12 +103,7 @@ python ../models/research/object_detection/builders/model_builder_test.py
 python ../models/research/object_detection/train.py --logtostderr --pipeline_config_path=configs/training_pipeline.config --train_dir=temp/models/v1/train
 ```
 
-Other info:
-
-- [TensorFlow Object Detection - Running Locally](https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/running_locally.md)
-
-
-# Evaluation
+### Evaluation
 
 
 ```
@@ -108,11 +113,16 @@ python ../models/research/object_detection/eval.py --logtostderr --pipeline_conf
 ```
 
 
-# TensorBoard
+### TensorBoard
 
 ```
 tensorboard --logdir=training:temp/models/v1/train,test:temp/models/v1/eval
 ```
+
+For more info:
+
+- [TensorFlow Object Detection - Running Locally](https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/running_locally.md)
+
 
 # Prediction
 
