@@ -46,9 +46,17 @@ cd vgg-faces-utils
 
 ```
 # cd face-detection/tf-ssd-mobilenet
-./make_tfrecord.py -d ../vgg-faces-utils/output -o temp/data -r 0.1
+./make_tfrecord.py -d ../vgg-faces-utils/output -e 100 -o temp/data -r 0.1
 
 ```
+
+Parameters:
+
+- `-d`, `--dir`: relative path to folder where we store labels and images
+- `-e`, `--extract`: how many images we want to extract from the whole set. Default: `100`.
+- `-o`, `--output`: relative path to folder where TFRecord files will be saved into. Default: `temp/data`
+- `-r`, `--ratio`: ratio of test set / training set. Default: `0.1` (1 image for test, 9 images for training)
+
 
 ### Get checkpoints
 
@@ -57,6 +65,10 @@ cd vgg-faces-utils
 wget http://49.156.52.21:7777/checkpoints/ssd_mobilenet_v2_coco_2018_03_29.tar.gz
 tar -zxvf ssd_mobilenet_v2_coco_2018_03_29.tar.gz -C temp/checkpoints
 ```
+
+To find more pretrained models:
+
+- [Tensorflow detection model zoo](https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md)
 
 
 # Training
@@ -80,6 +92,11 @@ python ../models/research/object_detection/builders/model_builder_test.py
 # train
 python ../models/research/object_detection/train.py --logtostderr --pipeline_config_path=configs/training_pipeline.config --train_dir=temp/models/v1/train
 ```
+
+Other info:
+
+- [TensorFlow Object Detection - Running Locally](https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/running_locally.md)
+
 
 # Evaluation
 

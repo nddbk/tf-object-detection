@@ -16,7 +16,11 @@ from scripts.utils import load, create_example
 
 
 def get_default_data_dir():
-    return 'data'
+    return 'temp/data'
+
+
+def get_default_extract_count():
+    return 100
 
 
 def get_default_split_ratio():
@@ -25,7 +29,6 @@ def get_default_split_ratio():
 
 def process(entries, output_dir, split_ratio=None):
     rat = float(split_ratio)
-    shuffle(entries)
     if rat >= 1 or rat < 0:
         rat = get_default_split_ratio()
     total = len(entries)
@@ -53,12 +56,21 @@ def process(entries, output_dir, split_ratio=None):
     test_writer.close()
 
 
-def preload(input_dir, output_dir, split_ratio=None):
+def preload(input_dir, extracting_count, output_dir, split_ratio=None):
     if path.exists(output_dir):
         rmtree(output_dir)
     mkdir(output_dir)
     files = load(input_dir)
-    return process(files, output_dir, split_ratio)
+    total = len(files)
+
+    if total > 0:
+        shuffle(files)
+        count = min(int(extracting_count), len(files))
+        entries = files[:count]
+        print('Selected {} entries to process'.format(count))
+        return process(entries, output_dir, split_ratio)
+    else:
+        print('No input label & image. Stopped!')
 
 
 def start():
@@ -67,6 +79,11 @@ def start():
         '-d',
         '--dir',
         help='Path to dataset. Default "../vgg-faces-utils/output"'
+    )
+    parser.add_argument(
+        '-e',
+        '--extract',
+        help='How many items? Default 100'
     )
     parser.add_argument(
         '-o',
@@ -82,6 +99,10 @@ def start():
     if not args.dir:
         print('Please specify path to source dir')
     else:
+        count = args.extract
+        if count is None:
+            count = get_default_extract_count()
+
         odir = args.output
         if odir is None:
             odir = get_default_data_dir()
@@ -92,6 +113,7 @@ def start():
 
         entries = preload(
             path.normpath(args.dir),
+            count,
             odir,
             ratio
         )
