@@ -8,9 +8,17 @@ Train Face Detection model with TensorFlow Object Detection + SSD + MobileNet
 
 ```
 # create workspace folder
-mkdir face-detection
-cd face-detection
+mkdir workspace
+cd workspace
 
+# get tensorflow models
+git clone https://github.com/tensorflow/models.git
+cd ../models/research
+protoc object_detection/protos/*.proto --python_out=.
+export PYTHONPATH=$PYTHONPATH:`pwd`:`pwd`/slim
+
+# back to root (workspace)
+cd ../../
 # create virtual environment
 python3 -m venv cv-venv
 source cv-venv/bin/activate
@@ -29,12 +37,11 @@ For more info:
 - [TensorFlow Object Detection - Installation](https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/installation.md)
 
 
-
 ### Download dataset
 
 
 ```
-# cd face-detection
+# cd workspace
 wget http://49.156.52.21:7777/dataset/vgg_face_dataset.tar.gz
 git clone https://github.com/ndaidong/vgg-faces-utils.git
 tar -zxvf vgg_face_dataset.tar.gz -C vgg-faces-utils
@@ -51,7 +58,7 @@ For more info:
 ### Generate TFRecord files
 
 ```
-# cd face-detection/tf-ssd-mobilenet
+# cd workspace/tf-ssd-mobilenet
 ./make_tfrecord.py -d ../vgg-faces-utils/output -e 100 -o temp/data -r 0.1
 
 ```
@@ -71,7 +78,7 @@ For more info:
 ### Get checkpoints
 
 ```
-# cd face-detection
+# cd workspace
 wget http://49.156.52.21:7777/checkpoints/ssd_mobilenet_v2_coco_2018_03_29.tar.gz
 tar -zxvf ssd_mobilenet_v2_coco_2018_03_29.tar.gz -C temp/checkpoints
 ```
@@ -81,21 +88,17 @@ To find more pretrained models:
 - [Tensorflow detection model zoo](https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md)
 
 
+
+The workspace now should look like this:
+
+![Workspace](https://i.imgur.com/NhIQ1GV.png)
+
+
 # Training
 
 
 ```
-# cd face-detection
-
-# setup tensorflow models
-git clone https://github.com/tensorflow/models.git
-cd ../models/research
-protoc object_detection/protos/*.proto --python_out=.
-export PYTHONPATH=$PYTHONPATH:`pwd`:`pwd`/slim
-
-# back to tf-ssd-mobilenet
-cd ../../tf-ssd-mobilenet
-
+# cd workspace/tf-ssd-mobilenet
 # check if Object Detection works
 python ../models/research/object_detection/builders/model_builder_test.py
 
@@ -107,7 +110,7 @@ python ../models/research/object_detection/train.py --logtostderr --pipeline_con
 
 
 ```
-# cd face-detection/tf-ssd-mobilenet
+# cd workspace/tf-ssd-mobilenet
 python ../models/research/object_detection/eval.py --logtostderr --pipeline_config_path=configs/training_pipeline.config --checkpoint_dir=temp/models/v1/train --eval_dir=temp/models/v1/eval
 
 ```
