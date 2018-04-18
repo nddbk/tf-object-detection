@@ -4,7 +4,6 @@ import argparse
 
 import sys
 
-from random import shuffle
 from os import path, mkdir
 from shutil import rmtree
 
@@ -60,15 +59,12 @@ def preload(input_dir, extracting_count, output_dir, split_ratio=None):
     if path.exists(output_dir):
         rmtree(output_dir)
     mkdir(output_dir)
-    files = load(input_dir)
+    files = load(input_dir, int(extracting_count))
     total = len(files)
 
     if total > 0:
-        shuffle(files)
-        count = min(int(extracting_count), len(files))
-        entries = files[:count]
-        print('Selected {} entries to process'.format(count))
-        return process(entries, output_dir, split_ratio)
+        print('Selected {} entries to process'.format(total))
+        return process(files, output_dir, split_ratio)
     else:
         print('No input label & image. Stopped!')
 

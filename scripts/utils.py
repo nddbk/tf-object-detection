@@ -3,6 +3,7 @@ import glob
 from os import path, system
 from collections import namedtuple
 
+from random import shuffle
 from lxml import etree
 from funcy import compose
 
@@ -152,6 +153,14 @@ def extract(arr):
     return examples
 
 
+def select(count):
+    def get_subset(arr):
+        shuffle(arr)
+        max_size = min(count, len(arr))
+        return arr[:max_size]
+    return get_subset
+
+        
 def handle(files):
     arr = []
     for i in range(len(files)):
@@ -170,6 +179,6 @@ def check(d):
     return files
 
 
-def load(d):
-    return compose(extract, handle, check)(d)
+def load(d, count):
+    return compose(extract, select(count), handle, check)(d)
 
