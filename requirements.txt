@@ -9,4 +9,4 @@ pycocotools>=2.0
 pycodestyle>=2.3
 #tensorflow-gpu>=1.5
 #tensorflow>=1.5
-#tqdm>=4.1
+tqdm>=4.1
