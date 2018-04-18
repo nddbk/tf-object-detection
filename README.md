@@ -12,8 +12,8 @@ mkdir face-detection
 cd face-detection
 
 # create virtual environment
-python3 -m venv venv
-source venv/bin/activate
+python3 -m venv cv-venv
+source cv-venv/bin/activate
 
 # get source code
 git clone https://github.com/ndaidong/tf-ssd-mobilenet.git
