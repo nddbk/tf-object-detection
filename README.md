@@ -22,6 +22,8 @@ cd ../../
 # create virtual environment
 python3 -m venv cv-venv
 source cv-venv/bin/activate
+# install tensorflow or tensorflow-gpu
+pip install tensorflow-gpu
 
 # get source code
 git clone https://github.com/ndaidong/tf-ssd-mobilenet.git
