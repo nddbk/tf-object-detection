@@ -37,6 +37,7 @@ pip install -r requirements.txt
 For more info:
 
 - [TensorFlow Object Detection - Installation](https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/installation.md)
+- [Setup a lightweight environment for deep learning](https://medium.com/@ndaidong/setup-a-simple-environment-for-deep-learning-dc05c81c4914)
 
 
 ### Download dataset
