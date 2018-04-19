@@ -1,5 +1,5 @@
-# tf-ssd-mobilenet
-Train Face Detection model with TensorFlow Object Detection + SSD + MobileNet
+# tf-object-detection
+Play with TensorFlow Object Detection
 
 
 # Preparation
