@@ -54,8 +54,9 @@ def create_example(entry, label_map_dict):
         raise ValueError('Image format not JPEG')
     key = hashlib.sha256(encoded_jpg).hexdigest()
 
-    width = int(data['size']['width'])
-    height = int(data['size']['height'])
+    width, height = image.size
+    width = int(width)
+    height = int(height)
 
     xmin = []
     ymin = []
@@ -69,10 +70,14 @@ def create_example(entry, label_map_dict):
     for obj in data['object']:
         difficult_obj.append(int(0))
 
-        xmin.append(float(obj['bndbox']['xmin']) / width)
-        ymin.append(float(obj['bndbox']['ymin']) / height)
-        xmax.append(float(obj['bndbox']['xmax']) / width)
-        ymax.append(float(obj['bndbox']['ymax']) / height)
+        _xmin = max(float(obj['bndbox']['xmin']), 0)
+        _ymin = max(float(obj['bndbox']['ymin']), 0)
+        _xmax = min(float(obj['bndbox']['xmax']), width)
+        _ymax = max(float(obj['bndbox']['ymax']), height)
+        xmin.append(_xmin / width)
+        ymin.append(_ymin / height)
+        xmax.append(_xmax / width)
+        ymax.append(_ymax / height)
 
         class_name = obj['name']
         classes_text.append(class_name.encode('utf8'))
