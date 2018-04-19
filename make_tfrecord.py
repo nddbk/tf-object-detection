@@ -154,15 +154,21 @@ def process(entries, output_dir, label_map, split_ratio):
     print('Handling training set ({})'.format(training_size))
     train_writer = tfwriter(output_dir + '/train.record')
     for entry in tqdm(training_set):
-        exp = create_example(entry, label_map_dict)
-        train_writer.write(exp.SerializeToString())
+        try:
+            exp = create_example(entry, label_map_dict)
+            train_writer.write(exp.SerializeToString())
+        except:
+            continue
     train_writer.close()
 
     print('Handling test set ({})'.format(test_size))
     test_writer = tfwriter(output_dir + '/eval.record')
     for entry in tqdm(test_set):
-        exp = create_example(entry, label_map_dict)
-        test_writer.write(exp.SerializeToString())
+        try:
+            exp = create_example(entry, label_map_dict)
+            test_writer.write(exp.SerializeToString())
+        except:
+            continue
     test_writer.close()
 
 
