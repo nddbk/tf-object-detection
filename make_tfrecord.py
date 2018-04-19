@@ -73,7 +73,7 @@ def create_example(entry, label_map_dict):
         _xmin = max(float(obj['bndbox']['xmin']), 0)
         _ymin = max(float(obj['bndbox']['ymin']), 0)
         _xmax = min(float(obj['bndbox']['xmax']), width)
-        _ymax = max(float(obj['bndbox']['ymax']), height)
+        _ymax = min(float(obj['bndbox']['ymax']), height)
         xmin.append(_xmin / width)
         ymin.append(_ymin / height)
         xmax.append(_xmax / width)
