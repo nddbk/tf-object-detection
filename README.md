@@ -11,15 +11,6 @@ Play with TensorFlow Object Detection
 mkdir workspace
 cd workspace
 
-# get tensorflow models
-sudo apt install protobuf-compiler
-git clone https://github.com/tensorflow/models.git
-cd models/research
-protoc object_detection/protos/*.proto --python_out=.
-export PYTHONPATH=$PYTHONPATH:`pwd`:`pwd`/slim
-
-# back to root (workspace)
-cd ../../
 # create virtual environment
 python3 -m venv cv-venv
 source cv-venv/bin/activate
@@ -27,9 +18,9 @@ source cv-venv/bin/activate
 pip install tensorflow-gpu
 
 # get source code
-git clone https://github.com/ndaidong/tf-ssd-mobilenet.git
+git clone https://github.com/ndaidong/tf-object-detection.git
 
-cd tf-ssd-mobilenet
+cd tf-object-detection
 pip install -r requirements.txt
 ./init.py
 
@@ -62,8 +53,8 @@ For more info:
 ### Generate TFRecord files
 
 ```
-# cd workspace/tf-ssd-mobilenet
-./make_tfrecord.py -d ../vgg-faces-utils/output -e 100 -o temp/data -r 0.1
+# cd workspace/tf-object-detection
+./make_tfrecord.py -d ../vgg-faces-utils/output -e 100 -o temp/data
 
 ```
 
@@ -72,6 +63,7 @@ Parameters:
 - `-d`, `--dir`: relative path to folder where we store labels and images
 - `-e`, `--extract`: how many images we want to extract from the whole set. Default: `100`.
 - `-o`, `--output`: relative path to folder where TFRecord files will be saved into. Default: `temp/data`
+- `-l`, `--labelmap`: relative path to label map file. Default `configs/label_map.pbtxt`
 - `-r`, `--ratio`: ratio of test set / training set. Default: `0.1` (1 image for test, 9 images for training)
 
 For more info:
@@ -86,6 +78,7 @@ For more info:
 wget http://49.156.52.21:7777/checkpoints/ssd_mobilenet_v2_coco_2018_03_29.tar.gz
 tar -zxvf ssd_mobilenet_v2_coco_2018_03_29.tar.gz -C temp/checkpoints
 ```
+
 
 To find more pretrained models:
 
@@ -102,12 +95,15 @@ The workspace now should look like this:
 
 
 ```
-# cd workspace/tf-ssd-mobilenet
-# check if Object Detection works
-python ../models/research/object_detection/builders/model_builder_test.py
+# cd workspace/tf-object-detection
+cd tflib
+protoc object_detection/protos/*.proto --python_out=.
+export PYTHONPATH=$PYTHONPATH:`pwd`:`pwd`/slim
+cd ..
+python object_detection/builders/model_builder_test.py
 
 # train
-python ../models/research/object_detection/train.py --logtostderr --pipeline_config_path=configs/training_pipeline.config --train_dir=temp/models/v1/train
+python tflib/object_detection/train.py --logtostderr --pipeline_config_path=configs/ssd_mobilenet_v2_coco.config --train_dir=temp/models/ssd_mobilenet_v2/train
 ```
 
 ### Evaluation
@@ -115,7 +111,7 @@ python ../models/research/object_detection/train.py --logtostderr --pipeline_con
 
 ```
 # cd workspace/tf-ssd-mobilenet
-python ../models/research/object_detection/eval.py --logtostderr --pipeline_config_path=configs/training_pipeline.config --checkpoint_dir=temp/models/v1/train --eval_dir=temp/models/v1/eval
+python tflib/object_detection/eval.py --logtostderr --pipeline_config_path=configs/ssd_mobilenet_v2_coco.config --checkpoint_dir=temp/models/ssd_mobilenet_v2/train --eval_dir=temp/models/ssd_mobilenet_v2/eval
 
 ```
 
@@ -123,7 +119,7 @@ python ../models/research/object_detection/eval.py --logtostderr --pipeline_conf
 ### TensorBoard
 
 ```
-tensorboard --logdir=training:temp/models/v1/train,test:temp/models/v1/eval
+tensorboard --logdir=training:temp/models/ssd_mobilenet_v2/train,test:temp/models/ssd_mobilenet_v2/eval
 ```
 
 For more info:
@@ -136,7 +132,7 @@ For more info:
 
 ```
 # cd workspace/tf-ssd-mobilenet
-python ../models/research/object_detection/export_inference_graph.py --input_type image_tensor --pipeline_config_path=configs/training_pipeline.config --trained_checkpoint_prefix=temp/models/v1/train/model.ckpt-0 --output_directory=temp/output/model_v1_graph.pb
+python tflib/object_detection/export_inference_graph.py --input_type image_tensor --pipeline_config_path=configs/ssd_mobilenet_v2_coco.config --trained_checkpoint_prefix=temp/models/ssd_mobilenet_v2/train/model.ckpt-0 --output_directory=temp/output/ssd_mobilenet_v2_graph.pb
 ```
 
 
