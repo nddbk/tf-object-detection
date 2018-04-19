@@ -92,11 +92,6 @@ To find more pretrained models:
 
 
 
-The workspace now should look like this:
-
-![Workspace](https://i.imgur.com/NhIQ1GV.png)
-
-
 # Training
 
 
