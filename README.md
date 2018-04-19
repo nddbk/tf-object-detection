@@ -24,6 +24,12 @@ cd tf-object-detection
 pip install -r requirements.txt
 ./init.py
 
+cd tflib
+protoc object_detection/protos/*.proto --python_out=.
+export PYTHONPATH=$PYTHONPATH:`pwd`:`pwd`/slim
+cd ..
+python tflib/object_detection/builders/model_builder_test.py
+
 ```
 
 For more info:
@@ -76,7 +82,7 @@ For more info:
 ```
 # cd workspace
 wget http://49.156.52.21:7777/checkpoints/ssd_mobilenet_v2_coco_2018_03_29.tar.gz
-tar -zxvf ssd_mobilenet_v2_coco_2018_03_29.tar.gz -C temp/checkpoints
+tar -zxvf ssd_mobilenet_v2_coco_2018_03_29.tar.gz -C tf-object-detection/temp/checkpoints
 ```
 
 
@@ -96,13 +102,6 @@ The workspace now should look like this:
 
 ```
 # cd workspace/tf-object-detection
-cd tflib
-protoc object_detection/protos/*.proto --python_out=.
-export PYTHONPATH=$PYTHONPATH:`pwd`:`pwd`/slim
-cd ..
-python object_detection/builders/model_builder_test.py
-
-# train
 python tflib/object_detection/train.py --logtostderr --pipeline_config_path=configs/ssd_mobilenet_v2_coco.config --train_dir=temp/models/ssd_mobilenet_v2/train
 ```
 
@@ -110,7 +109,7 @@ python tflib/object_detection/train.py --logtostderr --pipeline_config_path=conf
 
 
 ```
-# cd workspace/tf-ssd-mobilenet
+# cd workspace/tf-object-detection
 python tflib/object_detection/eval.py --logtostderr --pipeline_config_path=configs/ssd_mobilenet_v2_coco.config --checkpoint_dir=temp/models/ssd_mobilenet_v2/train --eval_dir=temp/models/ssd_mobilenet_v2/eval
 
 ```
@@ -119,6 +118,7 @@ python tflib/object_detection/eval.py --logtostderr --pipeline_config_path=confi
 ### TensorBoard
 
 ```
+# cd workspace/tf-object-detection
 tensorboard --logdir=training:temp/models/ssd_mobilenet_v2/train,test:temp/models/ssd_mobilenet_v2/eval
 ```
 
@@ -131,7 +131,7 @@ For more info:
 
 
 ```
-# cd workspace/tf-ssd-mobilenet
+# cd workspace/tf-object-detection
 python tflib/object_detection/export_inference_graph.py --input_type image_tensor --pipeline_config_path=configs/ssd_mobilenet_v2_coco.config --trained_checkpoint_prefix=temp/models/ssd_mobilenet_v2/train/model.ckpt-0 --output_directory=temp/output/ssd_mobilenet_v2_graph.pb
 ```
 
