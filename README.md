@@ -64,7 +64,7 @@ For more info:
 
 ```
 
-Parameters:
+Arguments:
 
 - `-d`, `--dir`: relative path to folder where we store labels and images
 - `-e`, `--extract`: how many images we want to extract from the whole set. Default: `100`.
@@ -127,14 +127,27 @@ For more info:
 
 ```
 # cd workspace/tf-object-detection
-python tflib/object_detection/export_inference_graph.py --input_type image_tensor --pipeline_config_path=configs/ssd_mobilenet_v2_coco.config --trained_checkpoint_prefix=temp/models/ssd_mobilenet_v2/train/model.ckpt-0 --output_directory=temp/output/ssd_mobilenet_v2_graph.pb
+python tflib/object_detection/export_inference_graph.py --input_type image_tensor --pipeline_config_path=configs/ssd_mobilenet_v2_coco.config --trained_checkpoint_prefix=temp/models/ssd_mobilenet_v2/train/model.ckpt-0 --output_directory=temp/output/ssd_mobilenet_v2_graph
 ```
 
 
 # Prediction
 
 
-// coming soon
+```
+# cd workspace/tf-object-detection
+./predict.py -m path_to_frozen_inference_graph.pb -l path_to_label_map.pbtxt
+
+```
+
+Arguments:
+
+- `-m`, `--model`: relative path to exported `.pb` graph file
+- `-l`, `--labelmap`: relative path to label map file. Default `configs/label_map.pbtxt`
+- `-f`, `--file`: path to image or video file. Only support `.jpg`, `.png`, `.mp4`, `.avi`, `.mkv`
+- `-c`, `--cam`: index of camera. Used this argument for realtime prediction with specified camera.
+- `-d`, `--dir`: path to image foldes. Used this argument for predict multi images. Default `./samples`
+- `-o`, `--output`: relative path to folder where we store output images (with boxes drew on). Go with `--dir`. Default `./temp/result`
 
 
 # License

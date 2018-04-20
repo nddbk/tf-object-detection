@@ -101,9 +101,15 @@ def create_example(entry, label_map_dict):
         'image/object/bbox/xmax': dataset_util.float_list_feature(xmax),
         'image/object/bbox/ymin': dataset_util.float_list_feature(ymin),
         'image/object/bbox/ymax': dataset_util.float_list_feature(ymax),
-        'image/object/class/text': dataset_util.bytes_list_feature(classes_text),
-        'image/object/class/label': dataset_util.int64_list_feature(classes),
-        'image/object/difficult': dataset_util.int64_list_feature(difficult_obj),
+        'image/object/class/text': dataset_util.bytes_list_feature(
+            classes_text
+        ),
+        'image/object/class/label': dataset_util.int64_list_feature(
+            classes
+        ),
+        'image/object/difficult': dataset_util.int64_list_feature(
+            difficult_obj
+        ),
         'image/object/truncated': dataset_util.int64_list_feature(truncated),
         'image/object/view': dataset_util.bytes_list_feature(poses),
     }))
@@ -162,7 +168,8 @@ def process(entries, output_dir, label_map, split_ratio):
         try:
             exp = create_example(entry, label_map_dict)
             train_writer.write(exp.SerializeToString())
-        except:
+        except ValueError:
+            print(ValueError)
             continue
     train_writer.close()
 
@@ -172,7 +179,8 @@ def process(entries, output_dir, label_map, split_ratio):
         try:
             exp = create_example(entry, label_map_dict)
             test_writer.write(exp.SerializeToString())
-        except:
+        except ValueError:
+            print(ValueError)
             continue
     test_writer.close()
 

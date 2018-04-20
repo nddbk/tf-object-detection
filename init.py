@@ -8,6 +8,7 @@ dirs = [
     'temp/data',
     'temp/models',
     'temp/output',
+    'temp/result'
 ]
 
 
