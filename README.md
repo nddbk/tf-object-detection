@@ -147,7 +147,7 @@ Arguments:
 - `-f`, `--file`: path to image or video file. Only support `.jpg`, `.png`, `.mp4`, `.avi`, `.mkv`
 - `-c`, `--cam`: index of camera. Used this argument for realtime prediction with specified camera.
 - `-d`, `--dir`: path to image foldes. Used this argument for predict multi images. Default `./samples`
-- `-o`, `--output`: relative path to folder where we store output images (with boxes drew on). Go with `--dir`. Default `./temp/result`
+- `-o`, `--output`: relative path to output folder. Go with `--dir`. Default `./temp/result`
 
 
 # License
