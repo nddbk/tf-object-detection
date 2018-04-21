@@ -150,6 +150,14 @@ Arguments:
 - `-o`, `--output`: relative path to output folder. Go with `--dir`. Default `./temp/result`
 
 
+
+# Tested with
+
+- TensorFlow v1.6, v1.7
+- Python v3.6.4, v3.6.5
+- Ubuntu 17.10
+
+
 # License
 
 The MIT License (MIT)
