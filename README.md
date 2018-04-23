@@ -54,7 +54,7 @@ cd vgg-faces-utils
 ./script.py -d vgg_face_dataset/files -o output
 ```
 
-For more info:
+Useful links:
 
 - [Download and annotate images from VGG Faces dataset](https://github.com/ndaidong/vgg-faces-utils#usage).
 
@@ -87,7 +87,7 @@ Arguments:
 - `-l`, `--labelmap`: relative path to label map file. Default `configs/label_map.pbtxt`
 - `-r`, `--ratio`: ratio of test set / training set. Default: `0.1` (1 image for test, 9 images for training)
 
-For more info:
+Useful links:
 
 - [TensorFlow Object Detection - Preparing Inputs](https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/using_your_own_dataset.md)
 
@@ -190,7 +190,7 @@ PATH_TO_PIPELINE_CONFIG
 tensorboard --logdir=training:PATH_TO_TRAIN_DIR,test:PATH_TO_EVALUATION_DIR
 ```
 
-For more info:
+Useful links:
 
 - [TensorFlow Object Detection - Running Locally](https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/running_locally.md)
 
@@ -203,7 +203,7 @@ For more info:
 python tflib/object_detection/export_inference_graph.py --input_type image_tensor --pipeline_config_path=PATH_TO_PIPELINE.config --trained_checkpoint_prefix=PATH_TO_TRAINING_DIR/model.ckpt-INDEX --output_directory=PATH_TO_OUTPUT_DIR
 ```
 
-More info:
+Useful links:
 
 - [Exporting a trained model for inference](https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/exporting_models.md)
 - “[How to deploy an Object Detection Model with TensorFlow serving](https://medium.freecodecamp.org/how-to-deploy-an-object-detection-model-with-tensorflow-serving-d6436e65d1d9)” by [@KailaGaurav](https://twitter.com/KailaGaurav)
