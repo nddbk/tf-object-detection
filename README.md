@@ -172,12 +172,12 @@ python tflib/object_detection/eval.py --logtostderr --pipeline_config_path=PATH_
 
 ```
 
-`PATH_TO_TRAIN_DIR` is the training models directory that we've specified above.
+`PATH_TO_TRAIN_DIR`: training model directory that we've specified above.
 
-`PATH_TO_EVALUATION_DIR` is the path to where to store evaluating result. It will be created automatically if not yet.
+`PATH_TO_EVALUATION_DIR`: path to where to store evaluating result. It will be created automatically if not yet.
 
 
-Recommended path: `temp/models/MODEL_NAME/MODEL_VERSION//eval`
+Recommended path: `temp/models/MODEL_NAME/MODEL_VERSION/eval`
 
 
 PATH_TO_PIPELINE_CONFIG
