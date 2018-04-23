@@ -8,16 +8,16 @@ from tflib.object_detection.utils import label_map_util
 
 
 NUM_CLASSES = 1
-MIN_THRESHOLD = 0.4
+MIN_THRESHOLD = 0.5
 
-paint_color = (0, 0, 255)
-paint_size = 1
+PAINT_COLOR = (0, 0, 255)
+PAINT_SIZE = 1
 
-text_color = (0, 0, 255)
-text_font = cv2.FONT_HERSHEY_PLAIN
+TEXT_COLOR = (0, 0, 255)
+TEXT_FONT = cv2.FONT_HERSHEY_PLAIN
 
-font_size = 1
-font_weight = 1
+FONT_SIZE = 1
+FONT_WEIGHT = 1
 
 
 def draw_boxes(image, boxes, labels, scores):
@@ -41,17 +41,17 @@ def draw_boxes(image, boxes, labels, scores):
             image,
             (xmin, ymin),
             (xmax, ymax),
-            paint_color,
-            paint_size
+            PAINT_COLOR,
+            PAINT_SIZE
         )
         cv2.putText(
             image,
             label + ' ' + str(score),
             (xmin, ymin - 12),
-            text_font,
-            font_size,
-            text_color,
-            font_weight,
+            TEXT_FONT,
+            FONT_SIZE,
+            TEXT_COLOR,
+            FONT_WEIGHT,
             cv2.LINE_AA
         )
         k += 1
