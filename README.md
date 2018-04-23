@@ -41,9 +41,12 @@ For more info:
 ### Download dataset
 
 
+##### For face detection
+
+
 ```
 # cd workspace
-wget http://49.156.52.21:7777/dataset/vgg_face_dataset.tar.gz
+wget http://www.robots.ox.ac.uk/~vgg/data/vgg_face/vgg_face_dataset.tar.gz
 git clone https://github.com/ndaidong/vgg-faces-utils.git
 tar -zxvf vgg_face_dataset.tar.gz -C vgg-faces-utils
 pip install -r vgg-faces-utils/requirements.txt
@@ -56,7 +59,19 @@ For more info:
 - [Download and annotate images from VGG Faces dataset](https://github.com/ndaidong/vgg-faces-utils#usage).
 
 
+##### For gender detection
+
+// coming soon
+
+
+##### For age detection
+
+// coming soon
+
+
+
 ### Generate TFRecord files
+
 
 ```
 # cd workspace/tf-object-detection
@@ -92,29 +107,87 @@ To find more pretrained models:
 
 
 
+# Pipeline config
+
+
+Depending on the selected checkpoint, we use the diffrent pipeline config.
+
+
+A long list of sample configs are collected here:
+
+- [TensorFlow - Sample config](https://github.com/tensorflow/models/tree/master/research/object_detection/samples/configs)
+
+
+Just download the appropriate config, then specify the following properties:
+
+##### train_config -> fine_tune_checkpoint
+
+Path to pretrained model, e.g `temp/checkpoints/ssd_mobilenet_v2_coco_2018_03_29/model.cpkt`
+
+
+##### train_input_reader --> tf_record_input_reader --> input_path
+
+Path to `train.record`, e.g `temp/data/train.record`
+
+##### train_input_reader --> label_map_path
+
+Path to label map, e.g `configs/face-detection/label_map.pbtxt`
+
+
+##### eval_input_reader --> tf_record_input_reader --> input_path
+
+Path to `eval.record`, e.g `temp/data/eval.record`
+
+##### eval_input_reader --> label_map_path
+
+Path to label map, e.g `configs/face-detection/label_map.pbtxt`
+
+
+More about pipeline here:
+
+
+- [Configuring the Object Detection Training Pipeline](https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/configuring_jobs.md)
+
+
+
 # Training
 
 
 ```
 # cd workspace/tf-object-detection
-python tflib/object_detection/train.py --logtostderr --pipeline_config_path=configs/ssd_mobilenet_v2_coco.config --train_dir=temp/models/ssd_mobilenet_v2/train
+python tflib/object_detection/train.py --logtostderr --pipeline_config_path=configs/PATH_TO_PIPELINE.config --train_dir=PATH_TO_TRAIN_DIR
 ```
+
+`PATH_TO_TRAIN_DIR` is where we would to save trained model into. It will be created automatically if not yet.
+
+Recommended path: `temp/models/MODEL_NAME/MODEL_VERSION/train`
+
 
 ### Evaluation
 
 
 ```
 # cd workspace/tf-object-detection
-python tflib/object_detection/eval.py --logtostderr --pipeline_config_path=configs/ssd_mobilenet_v2_coco.config --checkpoint_dir=temp/models/ssd_mobilenet_v2/train --eval_dir=temp/models/ssd_mobilenet_v2/eval
+python tflib/object_detection/eval.py --logtostderr --pipeline_config_path=PATH_TO_PIPELINE.config --checkpoint_dir=PATH_TO_TRAINING_DIR --eval_dir=PATH_TO_EVALUATION_DIR
 
 ```
+
+`PATH_TO_TRAIN_DIR` is the training models directory that we've specified above.
+
+`PATH_TO_EVALUATION_DIR` is the path to where to store evaluating result. It will be created automatically if not yet.
+
+
+Recommended path: `temp/models/MODEL_NAME/MODEL_VERSION//eval`
+
+
+PATH_TO_PIPELINE_CONFIG
 
 
 ### TensorBoard
 
 ```
 # cd workspace/tf-object-detection
-tensorboard --logdir=training:temp/models/ssd_mobilenet_v2/train,test:temp/models/ssd_mobilenet_v2/eval
+tensorboard --logdir=training:PATH_TO_TRAIN_DIR,test:PATH_TO_EVALUATION_DIR
 ```
 
 For more info:
@@ -127,8 +200,13 @@ For more info:
 
 ```
 # cd workspace/tf-object-detection
-python tflib/object_detection/export_inference_graph.py --input_type image_tensor --pipeline_config_path=configs/ssd_mobilenet_v2_coco.config --trained_checkpoint_prefix=temp/models/ssd_mobilenet_v2/train/model.ckpt-0 --output_directory=temp/output/ssd_mobilenet_v2_graph
+python tflib/object_detection/export_inference_graph.py --input_type image_tensor --pipeline_config_path=PATH_TO_PIPELINE.config --trained_checkpoint_prefix=PATH_TO_TRAINING_DIR/model.ckpt-INDEX --output_directory=PATH_TO_OUTPUT_DIR
 ```
+
+More info:
+
+- [Exporting a trained model for inference](https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/exporting_models.md)
+- “[How to deploy an Object Detection Model with TensorFlow serving](https://medium.freecodecamp.org/how-to-deploy-an-object-detection-model-with-tensorflow-serving-d6436e65d1d9)” by [@KailaGaurav](https://twitter.com/KailaGaurav)
 
 
 # Prediction
@@ -136,7 +214,7 @@ python tflib/object_detection/export_inference_graph.py --input_type image_tenso
 
 ```
 # cd workspace/tf-object-detection
-./predict.py -m path_to_frozen_inference_graph.pb -l path_to_label_map.pbtxt
+./predict.py -m PATH_TO_FROZEN_INFERENCE_GRAPH.pb -l PATH_TO_LABEL_MAP_FILE.pbtxt
 
 ```
 
@@ -145,9 +223,9 @@ Arguments:
 - `-m`, `--model`: relative path to exported `.pb` graph file
 - `-l`, `--labelmap`: relative path to label map file. Default `configs/label_map.pbtxt`
 - `-f`, `--file`: path to image or video file. Only support `.jpg`, `.png`, `.mp4`, `.avi`, `.mkv`
-- `-c`, `--cam`: index of camera. Used this argument for realtime prediction with specified camera.
-- `-d`, `--dir`: path to image foldes. Used this argument for predict multi images. Default `./samples`
-- `-o`, `--output`: relative path to output folder. Go with `--dir`. Default `./temp/result`
+- `-c`, `--cam`: index of camera. Use this argument for realtime prediction with specified camera.
+- `-d`, `--dir`: path to image foldes. Use this argument for predict multi images. Default `samples`
+- `-o`, `--output`: relative path to output folder. Go with `--dir`. Default `temp/result`
 
 
 
