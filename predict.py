@@ -15,9 +15,6 @@ from tqdm import tqdm
 from detector import create_detector, draw_boxes
 
 
-video_exts = ['.avi', '.mp4', '.mkv']
-
-
 def get_default_result_dir():
     return 'temp/result'
 
@@ -91,7 +88,7 @@ def check(detector, f=None, o=None):
 
     if path.isfile(f):
         ext = path.splitext(f)[1]
-        if ext in video_exts:
+        if ext in ['.avi', '.mp4', '.mkv']:
             return predict_video(f, detector)
         return predict_image(f, detector)
     if path.isdir(f):
