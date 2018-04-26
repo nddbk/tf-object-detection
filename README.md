@@ -75,7 +75,7 @@ Useful links:
 
 ```
 # cd workspace/tf-object-detection
-./make_tfrecord.py -d ../vgg-faces-utils/output -e 100 -o temp/data
+./make_tfrecord.py -d ../vgg-faces-utils/output -e 100 -o temp/data -l PATH_TO_LABEL_MAP_FILE.pbtxt 
 
 ```
 
