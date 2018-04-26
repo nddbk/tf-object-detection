@@ -42,7 +42,7 @@ def create_example(entry, label_map_dict):
     label_path = entry[1]
 
     with tf.gfile.GFile(label_path, 'r') as fid:
-        xml_str = fid.read()
+        xml_str = bytes(bytearray(fid.read(), encoding='utf-8'))
     xml = etree.fromstring(xml_str)
     data = dataset_util.recursive_parse_xml_to_dict(xml)['annotation']
 
@@ -50,6 +50,7 @@ def create_example(entry, label_map_dict):
         encoded_jpg = fid.read()
     encoded_jpg_io = io.BytesIO(encoded_jpg)
     image = Image.open(encoded_jpg_io)
+
     if image.format != 'JPEG':
         raise ValueError('Image format not JPEG')
     key = hashlib.sha256(encoded_jpg).hexdigest()
@@ -74,6 +75,7 @@ def create_example(entry, label_map_dict):
         _ymin = max(float(obj['bndbox']['ymin']), 0)
         _xmax = min(float(obj['bndbox']['xmax']), width)
         _ymax = min(float(obj['bndbox']['ymax']), height)
+
         xmin.append(_xmin / width)
         ymin.append(_ymin / height)
         xmax.append(_xmax / width)
@@ -168,8 +170,8 @@ def process(entries, output_dir, label_map, split_ratio):
         try:
             exp = create_example(entry, label_map_dict)
             train_writer.write(exp.SerializeToString())
-        except ValueError:
-            print(ValueError)
+        except ValueError as err:
+            print(err)
             continue
     train_writer.close()
 
@@ -179,8 +181,8 @@ def process(entries, output_dir, label_map, split_ratio):
         try:
             exp = create_example(entry, label_map_dict)
             test_writer.write(exp.SerializeToString())
-        except ValueError:
-            print(ValueError)
+        except ValueError as err:
+            print(err)
             continue
     test_writer.close()
 
