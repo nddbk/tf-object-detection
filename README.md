@@ -75,7 +75,7 @@ Useful links:
 
 ```
 # cd workspace/tf-object-detection
-./make_tfrecord.py -d ../vgg-faces-utils/output -e 100 -o temp/data -l PATH_TO_LABEL_MAP_FILE.pbtxt 
+./make_tfrecord.py -d ../vgg-faces-utils/output -e 100 -o temp/data -l PATH_TO_LABEL_MAP_FILE.pbtxt
 
 ```
 
@@ -96,7 +96,7 @@ Useful links:
 
 ```
 # cd workspace
-wget http://49.156.52.21:7777/checkpoints/ssd_mobilenet_v2_coco_2018_03_29.tar.gz
+wget http://download.tensorflow.org/models/object_detection/ssd_mobilenet_v2_coco_2018_03_29.tar.gz
 tar -zxvf ssd_mobilenet_v2_coco_2018_03_29.tar.gz -C tf-object-detection/temp/checkpoints
 ```
 
