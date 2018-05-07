@@ -119,6 +119,7 @@ def create_example(entry, label_map_dict):
         print(img_path)
         print(label_path)
         print(err)
+        return 0
 
 
 def select(count):
@@ -173,7 +174,8 @@ def process(entries, output_dir, label_map, split_ratio):
     for entry in tqdm(training_set):
         try:
             exp = create_example(entry, label_map_dict)
-            train_writer.write(exp.SerializeToString())
+            if isinstance(exp, dict)
+                train_writer.write(exp.SerializeToString())
         except ValueError as err:
             print(err)
             continue
@@ -184,7 +186,8 @@ def process(entries, output_dir, label_map, split_ratio):
     for entry in tqdm(test_set):
         try:
             exp = create_example(entry, label_map_dict)
-            test_writer.write(exp.SerializeToString())
+            if isinstance(exp, dict)
+                test_writer.write(exp.SerializeToString())
         except ValueError as err:
             print(err)
             continue
