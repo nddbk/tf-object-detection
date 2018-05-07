@@ -174,7 +174,7 @@ def process(entries, output_dir, label_map, split_ratio):
     for entry in tqdm(training_set):
         try:
             exp = create_example(entry, label_map_dict)
-            if isinstance(exp, dict)
+            if isinstance(exp, dict):
                 train_writer.write(exp.SerializeToString())
         except ValueError as err:
             print(err)
@@ -186,7 +186,7 @@ def process(entries, output_dir, label_map, split_ratio):
     for entry in tqdm(test_set):
         try:
             exp = create_example(entry, label_map_dict)
-            if isinstance(exp, dict)
+            if isinstance(exp, dict):
                 test_writer.write(exp.SerializeToString())
         except ValueError as err:
             print(err)
