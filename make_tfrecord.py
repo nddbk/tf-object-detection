@@ -6,7 +6,7 @@ import sys
 import hashlib
 import io
 
-from os import path, mkdir
+from os import path, mkdir, remove
 from shutil import rmtree
 from random import shuffle
 from lxml import etree
@@ -40,81 +40,85 @@ def get_default_split_ratio():
 def create_example(entry, label_map_dict):
     img_path = entry[0]
     label_path = entry[1]
+    try:
+        with tf.gfile.GFile(label_path, 'r') as fid:
+            xml_str = bytes(bytearray(fid.read(), encoding='utf-8'))
+        xml = etree.fromstring(xml_str)
+        data = dataset_util.recursive_parse_xml_to_dict(xml)['annotation']
 
-    with tf.gfile.GFile(label_path, 'r') as fid:
-        xml_str = bytes(bytearray(fid.read(), encoding='utf-8'))
-    xml = etree.fromstring(xml_str)
-    data = dataset_util.recursive_parse_xml_to_dict(xml)['annotation']
+        with tf.gfile.GFile(img_path, 'rb') as fid:
+            encoded_jpg = fid.read()
+        encoded_jpg_io = io.BytesIO(encoded_jpg)
+        image = Image.open(encoded_jpg_io)
 
-    with tf.gfile.GFile(img_path, 'rb') as fid:
-        encoded_jpg = fid.read()
-    encoded_jpg_io = io.BytesIO(encoded_jpg)
-    image = Image.open(encoded_jpg_io)
+        if image.format != 'JPEG':
+            raise ValueError('Image format not JPEG')
+        key = hashlib.sha256(encoded_jpg).hexdigest()
 
-    if image.format != 'JPEG':
-        raise ValueError('Image format not JPEG')
-    key = hashlib.sha256(encoded_jpg).hexdigest()
+        width, height = image.size
+        width = int(width)
+        height = int(height)
 
-    width, height = image.size
-    width = int(width)
-    height = int(height)
+        xmin = []
+        ymin = []
+        xmax = []
+        ymax = []
+        classes = []
+        classes_text = []
+        truncated = []
+        poses = []
+        difficult_obj = []
+        for obj in data['object']:
+            difficult_obj.append(int(0))
 
-    xmin = []
-    ymin = []
-    xmax = []
-    ymax = []
-    classes = []
-    classes_text = []
-    truncated = []
-    poses = []
-    difficult_obj = []
-    for obj in data['object']:
-        difficult_obj.append(int(0))
+            _xmin = max(float(obj['bndbox']['xmin']), 0)
+            _ymin = max(float(obj['bndbox']['ymin']), 0)
+            _xmax = min(float(obj['bndbox']['xmax']), width)
+            _ymax = min(float(obj['bndbox']['ymax']), height)
 
-        _xmin = max(float(obj['bndbox']['xmin']), 0)
-        _ymin = max(float(obj['bndbox']['ymin']), 0)
-        _xmax = min(float(obj['bndbox']['xmax']), width)
-        _ymax = min(float(obj['bndbox']['ymax']), height)
+            xmin.append(_xmin / width)
+            ymin.append(_ymin / height)
+            xmax.append(_xmax / width)
+            ymax.append(_ymax / height)
 
-        xmin.append(_xmin / width)
-        ymin.append(_ymin / height)
-        xmax.append(_xmax / width)
-        ymax.append(_ymax / height)
+            class_name = obj['name']
+            classes_text.append(class_name.encode('utf8'))
+            classes.append(label_map_dict[class_name])
+            truncated.append(int(0))
+            poses.append('Unspecified'.encode('utf8'))
 
-        class_name = obj['name']
-        classes_text.append(class_name.encode('utf8'))
-        classes.append(label_map_dict[class_name])
-        truncated.append(int(0))
-        poses.append('Unspecified'.encode('utf8'))
-
-    return tf.train.Example(features=tf.train.Features(feature={
-        'image/height': dataset_util.int64_feature(height),
-        'image/width': dataset_util.int64_feature(width),
-        'image/filename': dataset_util.bytes_feature(
-            data['filename'].encode('utf8')
-        ),
-        'image/source_id': dataset_util.bytes_feature(
-            data['filename'].encode('utf8')
-        ),
-        'image/key/sha256': dataset_util.bytes_feature(key.encode('utf8')),
-        'image/encoded': dataset_util.bytes_feature(encoded_jpg),
-        'image/format': dataset_util.bytes_feature('jpeg'.encode('utf8')),
-        'image/object/bbox/xmin': dataset_util.float_list_feature(xmin),
-        'image/object/bbox/xmax': dataset_util.float_list_feature(xmax),
-        'image/object/bbox/ymin': dataset_util.float_list_feature(ymin),
-        'image/object/bbox/ymax': dataset_util.float_list_feature(ymax),
-        'image/object/class/text': dataset_util.bytes_list_feature(
-            classes_text
-        ),
-        'image/object/class/label': dataset_util.int64_list_feature(
-            classes
-        ),
-        'image/object/difficult': dataset_util.int64_list_feature(
-            difficult_obj
-        ),
-        'image/object/truncated': dataset_util.int64_list_feature(truncated),
-        'image/object/view': dataset_util.bytes_list_feature(poses),
-    }))
+        return tf.train.Example(features=tf.train.Features(feature={
+            'image/height': dataset_util.int64_feature(height),
+            'image/width': dataset_util.int64_feature(width),
+            'image/filename': dataset_util.bytes_feature(
+                data['filename'].encode('utf8')
+            ),
+            'image/source_id': dataset_util.bytes_feature(
+                data['filename'].encode('utf8')
+            ),
+            'image/key/sha256': dataset_util.bytes_feature(key.encode('utf8')),
+            'image/encoded': dataset_util.bytes_feature(encoded_jpg),
+            'image/format': dataset_util.bytes_feature('jpeg'.encode('utf8')),
+            'image/object/bbox/xmin': dataset_util.float_list_feature(xmin),
+            'image/object/bbox/xmax': dataset_util.float_list_feature(xmax),
+            'image/object/bbox/ymin': dataset_util.float_list_feature(ymin),
+            'image/object/bbox/ymax': dataset_util.float_list_feature(ymax),
+            'image/object/class/text': dataset_util.bytes_list_feature(
+                classes_text
+            ),
+            'image/object/class/label': dataset_util.int64_list_feature(
+                classes
+            ),
+            'image/object/difficult': dataset_util.int64_list_feature(
+                difficult_obj
+            ),
+            'image/object/truncated': dataset_util.int64_list_feature(truncated),
+            'image/object/view': dataset_util.bytes_list_feature(poses),
+        }))
+    except ValueError as err:
+        print(img_path)
+        print(label_path)
+        print(err)
 
 
 def select(count):
