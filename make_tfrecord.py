@@ -97,13 +97,25 @@ def create_example(entry, label_map_dict):
                 'image/source_id': dataset_util.bytes_feature(
                     data['filename'].encode('utf8')
                 ),
-                'image/key/sha256': dataset_util.bytes_feature(key.encode('utf8')),
+                'image/key/sha256': dataset_util.bytes_feature(
+                    key.encode('utf8')
+                ),
                 'image/encoded': dataset_util.bytes_feature(encoded_jpg),
-                'image/format': dataset_util.bytes_feature('jpeg'.encode('utf8')),
-                'image/object/bbox/xmin': dataset_util.float_list_feature(xmin),
-                'image/object/bbox/xmax': dataset_util.float_list_feature(xmax),
-                'image/object/bbox/ymin': dataset_util.float_list_feature(ymin),
-                'image/object/bbox/ymax': dataset_util.float_list_feature(ymax),
+                'image/format': dataset_util.bytes_feature(
+                    'jpeg'.encode('utf8')
+                ),
+                'image/object/bbox/xmin': dataset_util.float_list_feature(
+                    xmin
+                ),
+                'image/object/bbox/xmax': dataset_util.float_list_feature(
+                    xmax
+                ),
+                'image/object/bbox/ymin': dataset_util.float_list_feature(
+                    ymin
+                ),
+                'image/object/bbox/ymax': dataset_util.float_list_feature(
+                    ymax
+                ),
                 'image/object/class/text': dataset_util.bytes_list_feature(
                     classes_text
                 ),
@@ -113,14 +125,16 @@ def create_example(entry, label_map_dict):
                 'image/object/difficult': dataset_util.int64_list_feature(
                     difficult_obj
                 ),
-                'image/object/truncated': dataset_util.int64_list_feature(truncated),
+                'image/object/truncated': dataset_util.int64_list_feature(
+                    truncated
+                ),
                 'image/object/view': dataset_util.bytes_list_feature(poses),
             }))
     except ValueError as err:
         print(img_path)
         print(label_path)
         print(err)
-        return 0
+        return None
 
 
 def select(count):
@@ -175,7 +189,7 @@ def process(entries, output_dir, label_map, split_ratio):
     for entry in tqdm(training_set):
         try:
             exp = create_example(entry, label_map_dict)
-            if exp != 0:
+            if exp is not None:
                 train_writer.write(exp.SerializeToString())
         except ValueError as err:
             print(err)
@@ -187,7 +201,7 @@ def process(entries, output_dir, label_map, split_ratio):
     for entry in tqdm(test_set):
         try:
             exp = create_example(entry, label_map_dict)
-            if exp != 0:
+            if exp is not None:
                 test_writer.write(exp.SerializeToString())
         except ValueError as err:
             print(err)
